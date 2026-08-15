@@ -3,6 +3,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
 
 app.use(cors());
@@ -21,6 +23,8 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.use("/api/auth", authRoutes);
+
 const PORT = process.env.PORT || 5000;
 
 mongoose
@@ -29,7 +33,7 @@ mongoose
     console.log("MongoDB connected");
 
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`ShopEase server running on port ${PORT}`);
     });
   })
   .catch((error) => {
