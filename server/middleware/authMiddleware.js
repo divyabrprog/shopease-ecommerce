@@ -1,42 +1,40 @@
 const jwt = require("jsonwebtoken");
 
 const protect = (req, res, next) => {
-  let token;
+  try {
+    const authHeader = req.headers.authorization;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer ")
-  ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      req.user = decoded;
-
-      next();
-    } catch (error) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
-        message: "Not authorized, token is invalid"
+        message: "Not authorized. No token provided."
       });
     }
-  }
 
-  if (!token) {
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = {
+      id: decoded.id,
+      role: decoded.role
+    };
+
+    next();
+  } catch (error) {
     return res.status(401).json({
-      message: "Not authorized, no token provided"
+      message: "Not authorized. Invalid or expired token."
     });
   }
 };
 
 const adminOnly = (req, res, next) => {
-  if (req.user && req.user.role === "admin") {
-    next();
-  } else {
-    res.status(403).json({
-      message: "Admin access required"
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({
+      message: "Admin access required."
     });
   }
+
+  next();
 };
 
 module.exports = {
