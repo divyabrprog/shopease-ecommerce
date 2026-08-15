@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopEase - Online Store</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #222;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 16px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 7px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      background: #374151;
+      color: white;
+    }
+
+    .nav-btn:hover {
+      background: #4b5563;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .primary:hover {
+      background: #1d4ed8;
+    }
+
+    .danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .success {
+      background: #16a34a;
+      color: white;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 5%;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .product img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: #eee;
+    }
+
+    .product-content {
+      padding: 18px;
+    }
+
+    .product h3 {
+      margin-bottom: 8px;
+    }
+
+    .description {
+      color: #666;
+      font-size: 14px;
+      min-height: 40px;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .stock {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .form-box {
+      background: white;
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    }
+
+    .form-box h2 {
+      margin-bottom: 20px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 7px;
+      display: none;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    .ok {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .cart-item,
+    .order {
+      background: white;
+      padding: 18px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .total {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #777;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      margin-top: 50px;
+      background: #111827;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding: 25px 15px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      header {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo" onclick="showHome()">ShopEase</div>
+
+  <nav>
+    <button class="nav-btn" onclick="showHome()">Home</button>
+    <button class="nav-btn" onclick="showCart()">
+      Cart (<span id="cartCount">0</span>)
+    </button>
+    <button class="nav-btn" onclick="showOrders()">My Orders</button>
+    <button class="nav-btn hidden" id="adminBtn" onclick="showAdmin()">Admin</button>
+    <button class="nav-btn" id="loginBtn" onclick="showLogin()">Login</button>
+    <button class="nav-btn hidden" id="logoutBtn" onclick="logout()">Logout</button>
+  </nav>
+</header>
+
+<main>
+
+  <section id="homeSection">
+
+    <div class="hero">
+      <h1>Welcome to ShopEase</h1>
+      <p>Simple, secure and easy online shopping.</p>
+      <button class="primary" onclick="loadProducts()">Shop Now</button>
+    </div>
+
+    <h2 style="margin-bottom:20px;">Products</h2>
+
+    <div id="products" class="products">
+      <div class="empty">Loading products...</div>
+    </div>
+
+  </section>
+
+  <section id="loginSection" class="hidden">
+
+    <div class="form-box">
+      <h2>Login</h2>
+
+      <div id="loginMessage" class="message"></div>
+
+      <input id="loginEmail" type="email" placeholder="Email" />
+      <input id="loginPassword" type="password" placeholder="Password" />
+
+      <button class="primary" onclick="login()">Login</button>
+
+      <p style="margin-top:15px;">
+        Don't have an account?
+        <button onclick="showRegister()">Register</button>
+      </p>
+    </div>
+
+  </section>
+
+  <section id="registerSection" class="hidden">
+
+    <div class="form-box">
+      <h2>Create Account</h2>
+
+      <div id="registerMessage" class="message"></div>
+
+      <input id="registerName" type="text" placeholder="Full name" />
+      <input id="registerEmail" type="email" placeholder="Email" />
+      <input id="registerPassword" type="password" placeholder="Password" />
+
+      <button class="primary" onclick="register()">Register</button>
+
+      <p style="margin-top:15px;">
+        Already have an account?
+        <button onclick="showLogin()">Login</button>
+      </p>
+    </div>
+
+  </section>
+
+  <section id="cartSection" class="hidden">
+
+    <h2 style="margin-bottom:20px;">Shopping Cart</h2>
+
+    <div id="cartItems"></div>
+
+    <div id="cartTotal" class="total"></div>
+
+    <button class="primary" onclick="showCheckout()">Checkout</button>
+
+  </section>
+
+  <section id="checkoutSection" class="hidden">
+
+    <div class="form-box">
+      <h2>Checkout</h2>
+
+      <div id="checkoutMessage" class="message"></div>
+
+      <input id="address" placeholder="Address" />
+      <input id="city" placeholder="City" />
+      <input id="state" placeholder="State" />
+      <input id="postalCode" placeholder="Postal Code" />
+      <input id="country" placeholder="Country" value="India" />
+
+      <button class="success" onclick="placeOrder()">Place Order</button>
+    </div>
+
+  </section>
+
+  <section id="ordersSection" class="hidden">
+
+    <h2 style="margin-bottom:20px;">My Orders</h2>
+
+    <div id="orders"></div>
+
+  </section>
+
+  <section id="adminSection" class="hidden">
+
+    <div class="form-box">
+      <h2>Admin - Add Product</h2>
+
+      <div id="adminMessage" class="message"></div>
+
+      <input id="productName" placeholder="Product name" />
+      <textarea id="productDescription" placeholder="Description"></textarea>
+      <input id="productPrice" type="number" placeholder="Price" />
+      <input id="productImage" placeholder="Image URL" />
+      <input id="productCategory" placeholder="Category" />
+      <input id="productStock" type="number" placeholder="Stock" />
+
+      <button class="primary" onclick="createProduct()">Create Product</button>
+    </div>
+
+    <h2 style="margin:30px 0 20px;">All Orders</h2>
+
+    <div id="adminOrders"></div>
+
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2026 ShopEase. All rights reserved.</p>
+</footer>
+
+<script>
+  const API = "https://shopease-ecommerce-pouv.onrender.com/api";
+
+  let token = localStorage.getItem("shopease_token");
+  let user = JSON.parse(localStorage.getItem("shopease_user") || "null");
+
+  let cart = JSON.parse(localStorage.getItem("shopease_cart") || "[]");
+
+  function saveCart() {
+    localStorage.setItem("shopease_cart", JSON.stringify(cart));
+    updateCartCount();
+  }
+
+  function updateCartCount() {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById("cartCount").textContent = count;
+  }
+
+  function hideAll() {
+    document.querySelectorAll("main > section").forEach(section => {
+      section.classList.add("hidden");
+    });
+  }
+
+  function showHome() {
+    hideAll();
+    document.getElementById("homeSection").classList.remove("hidden");
+    loadProducts();
+  }
+
+  function showLogin() {
+    hideAll();
+    document.getElementById("loginSection").classList.remove("hidden");
+  }
+
+  function showRegister() {
+    hideAll();
+    document.getElementById("registerSection").classList.remove("hidden");
+  }
+
+  function showCart() {
+    hideAll();
+    document.getElementById("cartSection").classList.remove("hidden");
+    renderCart();
+  }
+
+  async function showOrders() {
+    if (!token) {
+      showLogin();
+      return;
+    }
+
+    hideAll();
+    document.getElementById("ordersSection").classList.remove("hidden");
+    await loadMyOrders();
+  }
+
+  function showCheckout() {
+    if (!token) {
+      showLogin();
+      return;
+    }
+
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    hideAll();
+    document.getElementById("checkoutSection").classList.remove("hidden");
+  }
+
+  function showAdmin() {
+    if (!token || !user || user.role !== "admin") {
+      alert("Admin access required.");
+      return;
+    }
+
+    hideAll();
+    document.getElementById("adminSection").classList.remove("hidden");
+    loadAdminOrders();
+  }
+    async function register() {
+    const name = document.getElementById("registerName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
+    const password = document.getElementById("registerPassword").value;
+
+    const message = document.getElementById("registerMessage");
+
+    try {
+      const response = await fetch(`${API}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      message.className = "message ok";
+      message.textContent =
+        "Registration successful. You can now log in.";
+
+    } catch (error) {
+      message.className = "message error";
+      message.textContent = error.message;
+    }
+  }
+
+  async function login() {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    const message = document.getElementById("loginMessage");
+
+    try {
+      const response = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      token = data.token;
+      user = data.user;
+
+      localStorage.setItem("shopease_token", token);
+      localStorage.setItem(
+        "shopease_user",
+        JSON.stringify(user)
+      );
+
+      updateNavigation();
+
+      message.className = "message ok";
+      message.textContent = `Welcome, ${user.name}!`;
+
+      setTimeout(showHome, 700);
+
+    } catch (error) {
+      message.className = "message error";
+      message.textContent = error.message;
+    }
+  }
+
+  function logout() {
+    token = null;
+    user = null;
+
+    localStorage.removeItem("shopease_token");
+    localStorage.removeItem("shopease_user");
+
+    updateNavigation();
+    showHome();
+  }
+
+  function updateNavigation() {
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const adminBtn = document.getElementById("adminBtn");
+
+    if (token) {
+      loginBtn.classList.add("hidden");
+      logoutBtn.classList.remove("hidden");
+    } else {
+      loginBtn.classList.remove("hidden");
+      logoutBtn.classList.add("hidden");
+    }
+
+    if (user && user.role === "admin") {
+      adminBtn.classList.remove("hidden");
+    } else {
+      adminBtn.classList.add("hidden");
+    }
+  }
+
+  async function loadProducts() {
+    const container = document.getElementById("products");
+
+    try {
+      const response = await fetch(`${API}/products`);
+      const products = await response.json();
+
+      if (!response.ok) {
+        throw new Error("Unable to load products");
+      }
+
+      if (!products.length) {
+        container.innerHTML =
+          `<div class="empty">No products available.</div>`;
+        return;
+      }
+
+      container.innerHTML = products.map(product => `
+        <div class="product">
+          <img
+            src="${escapeHtml(
+              product.image ||
+              "https://via.placeholder.com/500"
+            )}"
+            alt="${escapeHtml(product.name)}"
+            onerror="this.src='https://via.placeholder.com/500'"
+          />
+
+          <div class="product-content">
+            <h3>${escapeHtml(product.name)}</h3>
+
+            <p class="description">
+              ${escapeHtml(product.description || "")}
+            </p>
+
+            <div class="price">
+              ₹${Number(product.price).toFixed(2)}
+            </div>
+
+            <div class="stock">
+              ${
+                product.stock > 0
+                  ? `${product.stock} available`
+                  : "Out of stock"
+              }
+            </div>
+
+            <button
+              class="primary"
+              ${product.stock <= 0 ? "disabled" : ""}
+              onclick='addToCart(${JSON.stringify(product)})'
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join("");
+
+    } catch (error) {
+      container.innerHTML =
+        `<div class="empty">Unable to load products.</div>`;
+    }
+  }
+
+  function addToCart(product) {
+    const existing = cart.find(
+      item => item._id === product._id
+    );
+
+    if (existing) {
+      if (existing.quantity < product.stock) {
+        existing.quantity++;
+      } else {
+        alert("No more stock available.");
+        return;
+      }
+    } else {
+      cart.push({
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        stock: product.stock,
+        quantity: 1
+      });
+    }
+
+    saveCart();
+    alert("Product added to cart.");
+  }
+
+  function renderCart() {
+    const container = document.getElementById("cartItems");
+    const totalElement = document.getElementById("cartTotal");
+
+    if (cart.length === 0) {
+      container.innerHTML =
+        `<div class="empty">Your cart is empty.</div>`;
+      totalElement.textContent = "";
+      return;
+    }
+
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-row">
+
+          <div>
+            <h3>${escapeHtml(item.name)}</h3>
+            <p>₹${Number(item.price).toFixed(2)} each</p>
+          </div>
+
+          <div>
+            <button
+              onclick="changeQuantity('${item._id}', -1)"
+            >
+              −
+            </button>
+
+            <strong>${item.quantity}</strong>
+
+            <button
+              onclick="changeQuantity('${item._id}', 1)"
+            >
+              +
+            </button>
+          </div>
+
+          <button
+            class="danger"
+            onclick="removeFromCart('${item._id}')"
+          >
+            Remove
+          </button>
+
+        </div>
+      </div>
+    `).join("");
+
+    const total = cart.reduce(
+      (sum, item) =>
+        sum + item.price * item.quantity,
+      0
+    );
+
+    totalElement.textContent =
+      `Total: ₹${total.toFixed(2)}`;
+  }
+
+  function changeQuantity(id, amount) {
+    const item = cart.find(
+      item => item._id === id
+    );
+
+    if (!item) return;
+
+    item.quantity += amount;
+
+    if (item.quantity <= 0) {
+      removeFromCart(id);
+      return;
+    }
+
+    if (item.quantity > item.stock) {
+      item.quantity = item.stock;
+      alert("Maximum available stock reached.");
+    }
+
+    saveCart();
+    renderCart();
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(
+      item => item._id !== id
+    );
+
+    saveCart();
+    renderCart();
+  }
+
+  async function placeOrder() {
+    if (!token) {
+      showLogin();
+      return;
+    }
+
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    const shippingAddress = {
+      address:
+        document.getElementById("address").value.trim(),
+
+      city:
+        document.getElementById("city").value.trim(),
+
+      state:
+        document.getElementById("state").value.trim(),
+
+      postalCode:
+        document.getElementById("postalCode").value.trim(),
+
+      country:
+        document.getElementById("country").value.trim()
+    };
+
+    const message =
+      document.getElementById("checkoutMessage");
+
+    const totalAmount = cart.reduce(
+      (sum, item) =>
+        sum + item.price * item.quantity,
+      0
+    );
+
+    try {
+      const response = await fetch(`${API}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          items: cart.map(item => ({
+            product: item._id,
+            quantity: item.quantity
+          })),
+          totalAmount,
+          shippingAddress
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Order failed"
+        );
+      }
+
+      message.className = "message ok";
+      message.textContent =
+        "Order placed successfully!";
+
+      cart = [];
+      saveCart();
+
+      setTimeout(showOrders, 1000);
+
+    } catch (error) {
+      message.className = "message error";
+      message.textContent = error.message;
+    }
+  }
+    async function loadMyOrders() {
+    const container = document.getElementById("orders");
+
+    try {
+      const response = await fetch(`${API}/orders/my-orders`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      const orders = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          orders.message || "Unable to load orders"
+        );
+      }
+
+      if (!orders.length) {
+        container.innerHTML =
+          `<div class="empty">You haven't placed any orders.</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map(order => `
+        <div class="order">
+          <h3>Order #${escapeHtml(order._id)}</h3>
+
+          <p>
+            Status:
+            <strong>${escapeHtml(order.status)}</strong>
+          </p>
+
+          <p>
+            Total:
+            <strong>
+              ₹${Number(order.totalAmount).toFixed(2)}
+            </strong>
+          </p>
+
+          <p>
+            Items:
+            ${order.items.map(item =>
+              `${escapeHtml(item.name)} × ${item.quantity}`
+            ).join(", ")}
+          </p>
+
+          <p>
+            ${escapeHtml(order.shippingAddress.city)},
+            ${escapeHtml(order.shippingAddress.state)}
+          </p>
+        </div>
+      `).join("");
+
+    } catch (error) {
+      container.innerHTML =
+        `<div class="empty">${escapeHtml(error.message)}</div>`;
+    }
+  }
+
+  async function createProduct() {
+    if (!token || !user || user.role !== "admin") {
+      alert("Admin access required.");
+      return;
+    }
+
+    const message =
+      document.getElementById("adminMessage");
+
+    const product = {
+      name:
+        document.getElementById("productName").value.trim(),
+
+      description:
+        document.getElementById("productDescription").value.trim(),
+
+      price:
+        Number(document.getElementById("productPrice").value),
+
+      image:
+        document.getElementById("productImage").value.trim(),
+
+      category:
+        document.getElementById("productCategory").value.trim(),
+
+      stock:
+        Number(document.getElementById("productStock").value)
+    };
+
+    try {
+      const response = await fetch(`${API}/products`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(product)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Product creation failed"
+        );
+      }
+
+      message.className = "message ok";
+      message.textContent =
+        "Product created successfully.";
+
+      document.getElementById("productName").value = "";
+      document.getElementById("productDescription").value = "";
+      document.getElementById("productPrice").value = "";
+      document.getElementById("productImage").value = "";
+      document.getElementById("productCategory").value = "";
+      document.getElementById("productStock").value = "";
+
+      await loadProducts();
+
+    } catch (error) {
+      message.className = "message error";
+      message.textContent = error.message;
+    }
+  }
+
+  async function loadAdminOrders() {
+    const container =
+      document.getElementById("adminOrders");
+
+    try {
+      const response = await fetch(`${API}/orders`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      const orders = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          orders.message || "Unable to load orders"
+        );
+      }
+
+      if (!orders.length) {
+        container.innerHTML =
+          `<div class="empty">No orders found.</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map(order => `
+        <div class="order">
+
+          <h3>
+            Order #${escapeHtml(order._id)}
+          </h3>
+
+          <p>
+            Customer:
+            ${escapeHtml(
+              order.user?.name || "Unknown"
+            )}
+          </p>
+
+          <p>
+            Email:
+            ${escapeHtml(
+              order.user?.email || "Unknown"
+            )}
+          </p>
+
+          <p>
+            Total:
+            <strong>
+              ₹${Number(order.totalAmount).toFixed(2)}
+            </strong>
+          </p>
+
+          <p>
+            Current status:
+            <strong>
+              ${escapeHtml(order.status)}
+            </strong>
+          </p>
+
+          <select
+            id="status-${order._id}"
+          >
+            <option value="Pending"
+              ${order.status === "Pending" ? "selected" : ""}>
+              Pending
+            </option>
+
+            <option value="Processing"
+              ${order.status === "Processing" ? "selected" : ""}>
+              Processing
+            </option>
+
+            <option value="Shipped"
+              ${order.status === "Shipped" ? "selected" : ""}>
+              Shipped
+            </option>
+
+            <option value="Delivered"
+              ${order.status === "Delivered" ? "selected" : ""}>
+              Delivered
+            </option>
+
+            <option value="Cancelled"
+              ${order.status === "Cancelled" ? "selected" : ""}>
+              Cancelled
+            </option>
+          </select>
+
+          <button
+            class="primary"
+            onclick="updateOrderStatus('${order._id}')"
+          >
+            Update Status
+          </button>
+
+        </div>
+      `).join("");
+
+    } catch (error) {
+      container.innerHTML =
+        `<div class="empty">${escapeHtml(error.message)}</div>`;
+    }
+  }
+
+  async function updateOrderStatus(orderId) {
+    const select =
+      document.getElementById(`status-${orderId}`);
+
+    const status = select.value;
+
+    try {
+      const response = await fetch(
+        `${API}/orders/${orderId}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ status })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Unable to update order"
+        );
+      }
+
+      alert("Order status updated successfully.");
+
+      await loadAdminOrders();
+      await loadMyOrders();
+
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  updateNavigation();
+  updateCartCount();
+  loadProducts();
+
+</script>
+
+</body>
+</html>
