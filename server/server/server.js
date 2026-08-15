@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -27,16 +28,15 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Authentication routes
+// API routes
 app.use("/api/auth", authRoutes);
-
-// Product routes
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Server port
 const PORT = process.env.PORT || 5000;
 
-// MongoDB connection
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
